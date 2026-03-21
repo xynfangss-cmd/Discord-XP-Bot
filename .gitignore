@@ -1,0 +1,16 @@
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Local DB / runtime
+bot.db
+*.db-journal
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
