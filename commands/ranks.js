@@ -1,4 +1,4 @@
-const { EmbedBuilder, PermissionsBitField } = require('discord.js');
+const { EmbedBuilder, PermissionsBitField, MessageFlags } = require('discord.js');
 
 const ALLOWED_USER_ID = '1475533428647792701';
 const RANK_ROLE_PREFIX = 'Rank:';
@@ -85,17 +85,17 @@ async function handleRank(interaction, db, rankSystem) {
         if (interaction.user.id !== ALLOWED_USER_ID) {
             await interaction.reply({
                 content: '❌ You are not allowed to use this command.',
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
             return;
         }
 
         if (!interaction.inGuild()) {
-            await interaction.reply({ content: '❌ This can only be used in a server.', ephemeral: true });
+            await interaction.reply({ content: '❌ This can only be used in a server.', flags: MessageFlags.Ephemeral });
             return;
         }
 
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         const desiredRank = interaction.options.getString('rank', true);
 
@@ -179,16 +179,16 @@ async function handleRank(interaction, db, rankSystem) {
 
 async function handleAddRank(interaction) {
     if (interaction.user.id !== ALLOWED_USER_ID) {
-        await interaction.reply({ content: '❌ You are not allowed to use this command.', ephemeral: true });
+        await interaction.reply({ content: '❌ You are not allowed to use this command.', flags: MessageFlags.Ephemeral });
         return;
     }
 
     if (!interaction.inGuild()) {
-        await interaction.reply({ content: '❌ This can only be used in a server.', ephemeral: true });
+        await interaction.reply({ content: '❌ This can only be used in a server.', flags: MessageFlags.Ephemeral });
         return;
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const targetUser = interaction.options.getUser('user', true);
     const desiredRank = interaction.options.getString('rank', true);
@@ -308,7 +308,7 @@ async function handleLeaderboard(interaction, db, rankSystem) {
         console.error('Error fetching leaderboard:', error);
         await interaction.editReply({
             content: '❌ **Error fetching leaderboard!** Please try again later.',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
     }
 }
