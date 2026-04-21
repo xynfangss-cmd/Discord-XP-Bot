@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType, MessageFlags } = require('discord.js');
 const Database = require('./database');
 const RankSystem = require('./ranks');
 const ChestSystem = require('./chest');
@@ -38,9 +38,9 @@ global.pendingBankTransactions = new Map();
 global.bankUpdateIntervals = new Map();
 
 // Ready event
-client.once('ready', async () => {
+client.once('clientReady', async () => {
     console.log(`✅ Bot is online as ${client.user.tag}`);
-    client.user.setActivity('💎 Gem Economy', { type: 'WATCHING' });
+    client.user.setActivity('💎 Gem Economy', { type: ActivityType.Watching });
     
     // Apply daily interest
     setInterval(async () => {
@@ -70,7 +70,7 @@ client.on('messageCreate', async (message) => {
             timestamp: new Date().toISOString()
         };
         
-        await message.reply({ embeds: [errorEmbed], ephemeral: true });
+        await message.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
         return;
     }
     
@@ -103,14 +103,14 @@ client.on('messageCreate', async (message) => {
             ];
         }
         
-        await message.reply({ embeds: [resultEmbed], ephemeral: true });
+        await message.reply({ embeds: [resultEmbed], flags: MessageFlags.Ephemeral });
         global.pendingBankTransactions.delete(message.author.id);
         
     } catch (error) {
         console.error('Error processing transaction:', error);
         await message.reply({ 
             content: '❌ An error occurred while processing your transaction. Please try again.', 
-            ephemeral: true 
+            flags: MessageFlags.Ephemeral 
         });
     }
 });
@@ -141,9 +141,9 @@ client.on('interactionCreate', async (interaction) => {
         console.error('Error handling interaction:', error);
         try {
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: 'An error occurred while processing your request.', ephemeral: true });
+                await interaction.followUp({ content: 'An error occurred while processing your request.', flags: MessageFlags.Ephemeral });
             } else {
-                await interaction.reply({ content: 'An error occurred while processing your request.', ephemeral: true });
+                await interaction.reply({ content: 'An error occurred while processing your request.', flags: MessageFlags.Ephemeral });
             }
         } catch (replyError) {
             console.error('Failed to send error response:', replyError);
@@ -242,7 +242,7 @@ async function handleSlashCommand(interaction) {
             await ticketSystem.handleSlashCommand(interaction);
             break;
         default:
-            await interaction.reply({ content: 'Unknown command.', ephemeral: true });
+            await interaction.reply({ content: 'Unknown command.', flags: MessageFlags.Ephemeral });
             break;
     }
 }
@@ -267,7 +267,7 @@ async function handleBankInteraction(interaction) {
             global.pendingBankTransactions.set(interaction.user.id, 'deposit');
             await interaction.reply({ 
                 content: 'Please reply with the amount you want to deposit (e.g., 1000, 50k, 1.5m).',
-                ephemeral: true 
+                flags: MessageFlags.Ephemeral 
             });
             break;
             
@@ -275,11 +275,11 @@ async function handleBankInteraction(interaction) {
             global.pendingBankTransactions.set(interaction.user.id, 'withdraw');
             await interaction.reply({ 
                 content: 'Please reply with the amount you want to withdraw (e.g., 1000, 50k, 1.5m).',
-                ephemeral: true 
+                flags: MessageFlags.Ephemeral 
             });
             break;
         default:
-            await interaction.reply({ content: 'Unknown bank action.', ephemeral: true });
+            await interaction.reply({ content: 'Unknown bank action.', flags: MessageFlags.Ephemeral });
             break;
     }
 }

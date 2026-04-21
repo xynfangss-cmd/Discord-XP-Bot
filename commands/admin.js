@@ -1,4 +1,4 @@
-const { EmbedBuilder, PermissionsBitField } = require('discord.js');
+const { EmbedBuilder, PermissionsBitField, MessageFlags } = require('discord.js');
 
 /** Comma-separated Discord user IDs in .env: ADMIN_IDS=id1,id2 */
 function getBotAdminIds() {
@@ -19,7 +19,7 @@ function denyAdmin() {
     return {
         content:
             '❌ **Permission Denied!** You need **Administrator** in this server, or your user ID must be listed in `ADMIN_IDS` in the bot `.env`.',
-        ephemeral: true
+        flags: MessageFlags.Ephemeral
     };
 }
 
@@ -47,7 +47,7 @@ async function handleAdminGiveGems(interaction, db) {
     const targetUser = interaction.options.getUser('user');
     const amount = interaction.options.getInteger('amount');
     
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     
     if (!isAdminUser(interaction)) {
         return await interaction.editReply(denyAdmin());
@@ -75,7 +75,7 @@ async function handleAdminGiveGems(interaction, db) {
             .setFooter({ text: `💎 Admin action by ${interaction.user.username}` })
             .setTimestamp();
         
-        await interaction.editReply({ embeds: [embed], ephemeral: true });
+        await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         
         console.log(`Admin ${interaction.user.username} gave ${amount} gems to ${targetUser.username}`);
         
@@ -83,7 +83,7 @@ async function handleAdminGiveGems(interaction, db) {
         console.error('Error giving gems:', error);
         await interaction.editReply({
             content: '❌ **Error giving gems!** Please try again later.',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
     }
 }
@@ -91,7 +91,7 @@ async function handleAdminGiveGems(interaction, db) {
 async function handleAdminGiveAll(interaction, db) {
     const amount = interaction.options.getInteger('amount');
     
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     
     if (!isAdminUser(interaction)) {
         return await interaction.editReply(denyAdmin());
@@ -129,7 +129,7 @@ async function handleAdminGiveAll(interaction, db) {
             .setFooter({ text: `💎 Admin action by ${interaction.user.username}` })
             .setTimestamp();
         
-        await interaction.editReply({ embeds: [embed], ephemeral: true });
+        await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         
         console.log(`Admin ${interaction.user.username} gave ${amount} gems to ${usersUpdated} users (total: ${totalGiven})`);
         
@@ -137,7 +137,7 @@ async function handleAdminGiveAll(interaction, db) {
         console.error('Error giving gems to all:', error);
         await interaction.editReply({
             content: '❌ **Error distributing gems!** Please try again later.',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
     }
 }
@@ -146,7 +146,7 @@ async function handleAdminSetBalance(interaction, db) {
     const targetUser = interaction.options.getUser('user');
     const amount = interaction.options.getInteger('amount');
     
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     
     if (!isAdminUser(interaction)) {
         return await interaction.editReply(denyAdmin());
@@ -177,7 +177,7 @@ async function handleAdminSetBalance(interaction, db) {
             .setFooter({ text: `💎 Admin action by ${interaction.user.username}` })
             .setTimestamp();
         
-        await interaction.editReply({ embeds: [embed], ephemeral: true });
+        await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         
         console.log(`Admin ${interaction.user.username} set balance of ${targetUser.username} to ${amount} gems`);
         
@@ -185,7 +185,7 @@ async function handleAdminSetBalance(interaction, db) {
         console.error('Error setting balance:', error);
         await interaction.editReply({
             content: '❌ **Error setting balance!** Please try again later.',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
     }
 }
@@ -193,7 +193,7 @@ async function handleAdminSetBalance(interaction, db) {
 async function handleAdminResetUser(interaction, db) {
     const targetUser = interaction.options.getUser('user');
     
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     
     if (!isAdminUser(interaction)) {
         return await interaction.editReply(denyAdmin());
@@ -220,7 +220,7 @@ async function handleAdminResetUser(interaction, db) {
             .setFooter({ text: `💎 Admin action by ${interaction.user.username}` })
             .setTimestamp();
         
-        await interaction.editReply({ embeds: [embed], ephemeral: true });
+        await interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         
         console.log(`Admin ${interaction.user.username} reset data for ${targetUser.username}`);
         
@@ -228,7 +228,7 @@ async function handleAdminResetUser(interaction, db) {
         console.error('Error resetting user data:', error);
         await interaction.editReply({
             content: '❌ **Error resetting user data!** Please try again later.',
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
     }
 }

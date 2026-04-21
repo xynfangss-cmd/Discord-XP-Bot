@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, MessageFlags } = require('discord.js');
 
 // Utility Command Handlers
 async function handleHelp(interaction) {
@@ -15,7 +15,7 @@ async function handleHelp(interaction) {
             { name: 'Admin', value: '`/admin givegems`, `/admin giveall`, `/admin setbalance`, `/admin resetuser`' },
             { name: 'Utility', value: '`/help`, `/ping`, `/serverinfo`, `/userinfo`' }
         );
-    await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
+    await interaction.reply({ embeds: [helpEmbed], flags: MessageFlags.Ephemeral });
 }
 
 async function handlePing(interaction) {
